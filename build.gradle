@@ -12,7 +12,7 @@ ext.coverallsVersion = '2.12.0'
 ext.junitVersion = '5.8.2'
 
 //spring
-ext.springBootVersion = '2.5.8'
+ext.springBootVersion = '2.6.4'
 ext.springFoxVersion = '3.0.0'
 
 //Spring/Dependency Injection
