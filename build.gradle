@@ -13,7 +13,7 @@ ext.junitVersion = '5.7.0'
 ext.mockitoversion = '4.5.1'
 ext.springBootTestAutoConfigure = '2.6.7'
 ext.hamcrestVersion = "2.2"
-ext.jaywayVersion = "2.2.0"
+ext.jaywayVersion = "2.7.0"
 
 //spring
 ext.springBootVersion = '2.5.8'
@@ -24,7 +24,7 @@ ext.springTestVersion = '5.3.20'
 ext.springContextVersion = '5.3.15'
 
 //Logging
-ext.log4jCoreVersion = '2.17.1'
+ext.log4jCoreVersion = '2.17.2'
 ext.log4jApiVersion = '2.17.2'
 
 allprojects {
