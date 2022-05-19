@@ -16,7 +16,7 @@ ext.byteBuddyVersion = '1.12.9'
 ext.springStarterTestVersion = '2.6.7'
 
 //spring
-ext.springBootVersion = '2.6.7'
+ext.springBootVersion = '2.7.0'
 ext.springDocVersion = '1.6.8'
 
 //Spring/Dependency Injection
