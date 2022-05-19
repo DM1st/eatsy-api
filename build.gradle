@@ -51,7 +51,7 @@ subprojects {
 
 buildscript {
     ext {
-        springBootGradlePluginVersion = '2.6.7'
+        springBootGradlePluginVersion = '2.7.0'
     }
     repositories {
         mavenCentral()
