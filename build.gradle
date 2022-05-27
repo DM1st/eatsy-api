@@ -4,7 +4,7 @@ apply plugin: 'jacoco'
 
 //Java utilities/helper libraries
 ext.commonsLang3Version = '3.12.0'
-ext.lombokVersion = '1.18.4'
+ext.lombokVersion = '1.18.24'
 
 //coveralls
 ext.coverallsVersion = '2.12.0'
