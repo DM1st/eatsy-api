@@ -14,7 +14,7 @@ ext.javaFakerVersion = '1.0.2'
 
 //test
 ext.junitVersion = '5.8.2'
-ext.mockitoCoreVersion = '4.5.1'
+ext.mockitoCoreVersion = '4.6.0'
 ext.byteBuddyVersion = '1.12.10'
 ext.springStarterTestVersion = '2.7.0'
 ext.equalsVerifierVersion = '3.10'
