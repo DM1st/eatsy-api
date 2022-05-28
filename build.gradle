@@ -15,7 +15,7 @@ ext.javaFakerVersion = '1.0.2'
 //test
 ext.junitVersion = '5.8.2'
 ext.mockitoCoreVersion = '4.5.1'
-ext.byteBuddyVersion = '1.12.9'
+ext.byteBuddyVersion = '1.12.10'
 ext.springStarterTestVersion = '2.7.0'
 ext.equalsVerifierVersion = '3.10'
 ext.toStringVerifierVersion = '1.4.8'
@@ -23,7 +23,7 @@ ext.assertJVersion = '3.22.0'
 
 //spring
 ext.springBootVersion = '2.7.0'
-ext.springDocVersion = '1.6.8'
+ext.springDocVersion = '1.6.9'
 
 //Spring/Dependency Injection
 ext.springContextVersion = '5.3.20'
