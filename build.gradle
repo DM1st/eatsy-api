@@ -22,7 +22,7 @@ ext.toStringVerifierVersion = '1.4.8'
 ext.assertJVersion = '3.22.0'
 
 //spring
-ext.springBootVersion = '2.7.0'
+ext.springBootVersion = '2.7.1'
 ext.springDocVersion = '1.6.9'
 
 //Spring/Dependency Injection
