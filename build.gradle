@@ -19,7 +19,7 @@ ext.byteBuddyVersion = '1.12.10'
 ext.springStarterTestVersion = '2.7.0'
 ext.equalsVerifierVersion = '3.10'
 ext.toStringVerifierVersion = '1.4.8'
-ext.assertJVersion = '3.22.0'
+ext.assertJVersion = '3.23.1'
 ext.h2Version = '2.1.214'
 ext.hsqldbVersion = '2.7.1'
 
