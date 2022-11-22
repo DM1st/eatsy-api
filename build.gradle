@@ -24,7 +24,7 @@ ext.h2Version = '2.1.214'
 ext.hsqldbVersion = '2.7.1'
 
 //spring
-ext.springBootVersion = '2.7.0'
+ext.springBootVersion = '2.7.5'
 ext.springDocVersion = '1.6.9'
 
 //Spring/Dependency Injection
