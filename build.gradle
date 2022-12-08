@@ -13,7 +13,7 @@ ext.coverallsVersion = '2.12.0'
 ext.javaFakerVersion = '1.0.2'
 
 //test
-ext.junitVersion = '5.8.2'
+ext.junitVersion = '5.9.1'
 ext.mockitoCoreVersion = '4.9.0'
 ext.byteBuddyVersion = '1.12.19'
 ext.springStarterTestVersion = '2.7.0'
