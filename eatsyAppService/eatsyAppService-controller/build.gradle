@@ -12,6 +12,7 @@ dependencies {
 
     //Java utilities/helper libraries
     implementation "org.apache.commons:commons-lang3:$commonsLang3Version"
+    implementation "commons-io:commons-io:$commonsIoVersion"
 
     //Spring boot  - if using the spring boot starter module with log4j2 in other gradle project then exclude the default logback logging using configurations
     implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"

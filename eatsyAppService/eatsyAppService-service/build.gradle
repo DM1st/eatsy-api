@@ -10,6 +10,8 @@ dependencies {
 
     //dependency injection
     implementation "org.springframework:spring-context:$springContextVersion"
+    //Spring Boot
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
 
     //logging
     implementation "org.apache.logging.log4j:log4j-core:$log4jCoreVersion"

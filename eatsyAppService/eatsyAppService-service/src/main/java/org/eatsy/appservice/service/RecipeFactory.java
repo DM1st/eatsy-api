@@ -1,9 +1,12 @@
 package org.eatsy.appservice.service;
 
 
+import org.eatsy.appservice.model.ImageModel;
+import org.eatsy.appservice.model.RecipeMediaCardModel;
 import org.eatsy.appservice.model.RecipeModel;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Interface for interacting with recipes
@@ -19,11 +22,12 @@ public interface RecipeFactory {
 
     /**
      * Creates and persists a new Recipe.
+     * These will be persisted via the Recipe Domain to ensure the model recipes are of allowed composition.
      *
-     * @param recipeModel the recipe model that has the data for the new Recipe
-     * @return a recipe model object containing the data from the newly created and persisted recipe.
+     * @param recipeMediaCardModel the recipeMediaCard model that has the data (and media/image content) for the new Recipe
+     * @return a recipe model object containing the non-media/image data from the newly created and persisted recipe.
      */
-    RecipeModel createRecipe(RecipeModel recipeModel);
+    RecipeModel createRecipe(RecipeMediaCardModel recipeMediaCardModel);
 
     /**
      * Deletes the requested recipeModel and returns the updated list of recipes
@@ -36,10 +40,13 @@ public interface RecipeFactory {
     /**
      * Replaces the existing recipe with the updated version supplied.
      *
-     * @param recipeModelWithUpdates the recipe model with the updated changes to be persisted.
-     * @param recipeKey              the unique ID of the recipe. This will allow the recipe that needs to be
-     *                               updated to be identified.
+     * @param recipeMediaCardModelWithUpdated the recipeMediaCard model with the updated changes to be persisted.
+     * @param recipeKey                       the unique ID of the recipe. This will allow the recipe that needs to be
+     *                                        updated to be identified.
      * @return the updated recipeModel with the new updates/changes applied.
      */
-    RecipeModel updateRecipe(String recipeKey, RecipeModel recipeModelWithUpdates);
+    RecipeModel updateRecipe(String recipeKey, RecipeMediaCardModel recipeMediaCardModelWithUpdated);
+
+    //TODO
+    Set<ImageModel> retrieveCorrespondingImageModels(String recipeKey);
 }

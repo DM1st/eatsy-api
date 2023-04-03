@@ -1,7 +1,7 @@
 package org.eatsy.appservice.persistence;
 
 import org.eatsy.appservice.persistence.model.RecipeEntity;
-import org.eatsy.appservice.persistence.service.EatsyRepository;
+import org.eatsy.appservice.persistence.recipe.service.EatsyRecipeRepository;
 import org.eatsy.appservice.testdatageneration.RecipeEntityDataFactory;
 import org.eatsy.appservice.testdatageneration.constants.EatsyRecipeTestParameters;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +25,7 @@ import java.util.UUID;
 //The annotation will disable full auto-configuration applying only enable configuration relevant to JPA tests.
 //tests annotated with @DataJpaTest are transactional and roll back at the end of each test
 @DataJpaTest
-public class EatsyRepositoryJPATests {
+public class EatsyRecipeRepositoryJPATests {
 
     // TestEntityManager allows us to use EntityManager in DataJpaTests.
     // EntityManager is used by Spring to interact with the persistence context
@@ -34,7 +34,7 @@ public class EatsyRepositoryJPATests {
 
     //The Eatsy Repository that extends the JPA interface
     @Autowired
-    private EatsyRepository eatsyRepository;
+    private EatsyRecipeRepository eatsyRecipeRepository;
 
     //List of recipe entities for use in the test cases.
     private List<RecipeEntity> recipeEntityList;
@@ -66,7 +66,7 @@ public class EatsyRepositoryJPATests {
         final RecipeEntity expectedRecipeEntity = recipeEntityList.get(0);
 
         //Execute the method under test
-        final RecipeEntity savedRecipe = eatsyRepository.save(expectedRecipeEntity);
+        final RecipeEntity savedRecipe = eatsyRecipeRepository.save(expectedRecipeEntity);
 
         //Do the assertions
         Assertions.assertNotNull(savedRecipe);
@@ -92,7 +92,7 @@ public class EatsyRepositoryJPATests {
 
 
         //Test
-        final List<RecipeEntity> actualRecipeEntityList = eatsyRepository.findAll();
+        final List<RecipeEntity> actualRecipeEntityList = eatsyRecipeRepository.findAll();
 
         //Assertions
         Assertions.assertNotNull(actualRecipeEntityList);
@@ -125,8 +125,8 @@ public class EatsyRepositoryJPATests {
 
 
         //Test
-        eatsyRepository.deleteById(recipeEntityList.get(indexOfRecipeEntityToDelete).getKey());
-        final Optional<RecipeEntity> recipeEntityOptional = eatsyRepository.findById(recipeEntityForDeletion.getKey());
+        eatsyRecipeRepository.deleteById(recipeEntityList.get(indexOfRecipeEntityToDelete).getKey());
+        final Optional<RecipeEntity> recipeEntityOptional = eatsyRecipeRepository.findById(recipeEntityForDeletion.getKey());
 
         //Assertions
         Assertions.assertFalse(recipeEntityOptional.isPresent());

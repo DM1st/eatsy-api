@@ -33,18 +33,19 @@ public class RecipeModel {
     private String recipeSummary;
 
     @Schema(description = "Number of thumbs up/likes the recipe has received")
-    private Integer thumbsUpCount;
+    private String thumbsUpCount;
 
     @Schema(description = "Number of thumbs down/dislikes the recipe has received")
-    private Integer thumbsDownCount;
+    private String thumbsDownCount;
 
     @Schema(description = "tags to be associated with the recipe to help with sorting by category")
     private Set<String> tags;
 
     @Schema(description = "The ingredients for the recipe.")
-    private Map<Integer, String> ingredients;
+    private Map<String, String> ingredients;
 
     @Schema(description = "The method for creating the recipe from the ingredients.")
-    private Map<Integer, String> method;
+    private Map<String, String> method;
+
 
 }

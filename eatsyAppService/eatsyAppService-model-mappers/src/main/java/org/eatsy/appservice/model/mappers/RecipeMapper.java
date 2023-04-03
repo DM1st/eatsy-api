@@ -1,11 +1,12 @@
 package org.eatsy.appservice.model.mappers;
 
 import org.eatsy.appservice.domain.Recipe;
+import org.eatsy.appservice.model.RecipeMediaCardModel;
 import org.eatsy.appservice.model.RecipeModel;
 import org.eatsy.appservice.persistence.model.RecipeEntity;
 
 /**
- * Recipe Mapper to map between recipe domain and model objects.
+ * Recipe Mapper to map between recipe domain, entity and model objects.
  */
 public interface RecipeMapper {
 
@@ -18,12 +19,12 @@ public interface RecipeMapper {
     RecipeModel mapDomainToModel(final Recipe recipe);
 
     /**
-     * Map the recipeModel to a recipe domain object.
+     * Map the recipeMediaCardModel to a recipe domain object.
      *
-     * @param recipeModel the model object to be mapped to domain object
-     * @return the recipe domain object that has been created from the recipe model object
+     * @param recipeMediaCardModel the model object to be mapped to domain object
+     * @return the recipe domain object that has been created from the recipeMediaCard model object
      */
-    Recipe mapModelToDomain(final RecipeModel recipeModel);
+    Recipe mapModelToDomain(final RecipeMediaCardModel recipeMediaCardModel);
 
     /**
      * Map the recipe domain object to a recipe entity object for persistence to database.

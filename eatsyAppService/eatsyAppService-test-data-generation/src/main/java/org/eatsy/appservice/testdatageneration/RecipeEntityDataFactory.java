@@ -2,8 +2,12 @@ package org.eatsy.appservice.testdatageneration;
 
 import com.github.javafaker.Faker;
 import org.eatsy.appservice.persistence.model.RecipeEntity;
+import org.eatsy.appservice.persistence.model.RecipeImageEntity;
 
+import java.io.IOException;
 import java.util.*;
+
+import static org.eatsy.appservice.testdatageneration.RecipeDataFactory.generateRandomImageAsByteArray;
 
 /**
  * Interface for recipe entity test data creation utility methods
@@ -17,7 +21,7 @@ public interface RecipeEntityDataFactory {
      * @param maxMethodMapSize     Max value for the generated number of method steps in the recipe entity
      * @return a randomly generated RecipeEntity object.
      */
-    static RecipeEntity generateRandomRecipeEntity(final int maxIngredientSetSize, final int maxMethodMapSize) {
+    static RecipeEntity generateRandomRecipeEntity(final int maxIngredientSetSize, final int maxMethodMapSize) throws IOException {
 
         //Setup
         final RecipeEntity recipeEntity = new RecipeEntity();
@@ -39,6 +43,8 @@ public interface RecipeEntityDataFactory {
         final Map<Integer, String> generatedIngredientsMap = generateIngredientsMap(maxIngredientSetSize);
         //Generate a map of method steps.
         final Map<Integer, String> generatedMethodMap = generateMethodMap(maxMethodMapSize);
+        //Generate a set of recipeImage entities.
+        final Set<RecipeImageEntity> generatedRecipeImageSet = generateRecipeImageSet(5);//TODO Extract to constant(both)
 
         recipeEntity.setName(recipeName);
         recipeEntity.setUploader(uploader);
@@ -48,8 +54,46 @@ public interface RecipeEntityDataFactory {
         recipeEntity.setTags(tags);
         recipeEntity.setIngredientsMap(generatedIngredientsMap);
         recipeEntity.setMethodMap(generatedMethodMap);
+        recipeEntity.setRecipeImageEntity(generatedRecipeImageSet);
         return recipeEntity;
 
+    }
+
+    /**
+     * Generates a set of RecipeImageEntity objects
+     *
+     * @param maxRecipeImageSetSize Max value for the generated number of recipeImageEntites in the recipe
+     * @return a set of RecipeImageEntity objects
+     */
+    static Set<RecipeImageEntity> generateRecipeImageSet(final int maxRecipeImageSetSize) throws IOException {
+
+        //Create the RecipeImageEntity set and define the number of RecipeImageEntites in the set.
+        final Set<RecipeImageEntity> recipeImageEntitySet = new HashSet<>();
+        final int numberOfRecipeImages = generateNumber(maxRecipeImageSetSize);
+
+        //Populate the recipeImageEntitySet with random recipeImageEntityObjects
+        for (int i = 0; i < maxRecipeImageSetSize; i++) {
+            final RecipeImageEntity generatedRecipeImageEntity = generateRecipeImageEntity();
+            recipeImageEntitySet.add(generatedRecipeImageEntity);
+        }
+
+        return recipeImageEntitySet;
+    }
+
+    /**
+     * Generates a recipeImageEntity with random data
+     *
+     * @return randomly generated recipeImageEntity object
+     */
+    static RecipeImageEntity generateRecipeImageEntity() throws IOException {
+
+        //Faker object to generate the test data
+        final Faker faker = new Faker();
+
+        //Generate a random image for the recipe image and convert it to a byte array.
+        final byte[] imageAsByteArray = generateRandomImageAsByteArray();//TODO best place to store?+continue
+
+        return null;
     }
 
     /**
@@ -60,7 +104,7 @@ public interface RecipeEntityDataFactory {
      * @param maxMethodMapSize     Max value for the generated number of method steps in each recipe entity
      * @return a randomly generated list of recipeEntity objects.
      */
-    static List<RecipeEntity> generateRecipeEntityList(final int maxNumberOfRecipes, final int maxIngredientSetSize, final int maxMethodMapSize) {
+    static List<RecipeEntity> generateRecipeEntityList(final int maxNumberOfRecipes, final int maxIngredientSetSize, final int maxMethodMapSize) throws IOException {
 
         //Create the recipe list and define the number of recipes in the list.
         final List<RecipeEntity> recipeEntityList = new ArrayList<>();

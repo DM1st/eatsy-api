@@ -5,7 +5,7 @@ import org.eatsy.appservice.domain.Recipe;
 import org.eatsy.appservice.model.RecipeModel;
 import org.eatsy.appservice.model.mappers.RecipeMapper;
 import org.eatsy.appservice.persistence.model.RecipeEntity;
-import org.eatsy.appservice.persistence.service.EatsyRepositoryService;
+import org.eatsy.appservice.persistence.recipe.service.EatsyRecipeRepositoryService;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public interface RecipeMockFactory {
      * @param inputRecipeModel randomly generated recipe model test data.
      */
     static RecipeEntity createMocksForMapperAndPersistenceServicesInCreateOrUpdateRecipeTests(
-            final RecipeModel inputRecipeModel, final EatsyRepositoryService eatsyRepositoryHandler, final RecipeMapper recipeMapperHandler) {
+            final RecipeModel inputRecipeModel, final EatsyRecipeRepositoryService eatsyRepositoryHandler, final RecipeMapper recipeMapperHandler) {
 
         //Configure the eatsyRepository Mock to return the mocked data (persisted Recipe Entity) when the eatsyRepository is called.
         final RecipeEntity mockedPersistedRecipeEntity = RecipeMockFactory.createMockRecipeEntityFromModel(inputRecipeModel);
@@ -51,7 +51,7 @@ public interface RecipeMockFactory {
      * @param expectedRecipeModelList randomly generated list of recipe model test data.
      */
     static void createMocksForMapperAndPersistenceServicesInRetrieveAllRecipeServiceMethod(
-            final List<RecipeModel> expectedRecipeModelList, final EatsyRepositoryService eatsyRepositoryHandler, final RecipeMapper recipeMapperHandler) {
+            final List<RecipeModel> expectedRecipeModelList, final EatsyRecipeRepositoryService eatsyRepositoryHandler, final RecipeMapper recipeMapperHandler) {
 
         //Mock the response for when the service under test calls the persistence layer eatsyRepositoryHandler.retrieveAllRecipes() method.
         final List<RecipeEntity> expectedRecipeEntityList = RecipeMockFactory.createMockRecipeEntityListFromModelList(expectedRecipeModelList);

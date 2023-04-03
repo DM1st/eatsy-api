@@ -2,7 +2,13 @@ package org.eatsy.appservice.testdatageneration;
 
 import com.github.javafaker.Faker;
 import org.eatsy.appservice.domain.Recipe;
+import org.eatsy.appservice.domain.RecipeImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -17,7 +23,7 @@ public interface RecipeDataFactory {
      * @param maxMethodMapSize     Max value for the generated number of method steps in the recipe
      * @return a randomly generated Recipe object.
      */
-    static Recipe generateRandomRecipe(final int maxIngredientSetSize, final int maxMethodMapSize) {
+    static Recipe generateRandomRecipe(final int maxIngredientSetSize, final int maxMethodMapSize) throws IOException {
 
         //Setup
         //Faker object to generate the test data
@@ -35,9 +41,11 @@ public interface RecipeDataFactory {
         final Map<Integer, String> generatedIngredientMap = generateIngredientMap(maxIngredientSetSize);
         //Generate a map of method steps.
         final Map<Integer, String> generatedMethodMap = generateMethodMap(maxMethodMapSize);
+        //Generate a set of RecipeImage objects
+        final Set<RecipeImage> generatedRecipeImageSet = generateRecipeImageSet(5);
 
         //Construct random recipe
-        final Recipe recipe = new Recipe.RecipeBuilder(recipeName, uploader, recipeSummary)
+        final Recipe recipe = new Recipe.RecipeBuilder(recipeName, uploader, recipeSummary, generatedRecipeImageSet)
                 .withTags(tags)
                 .withIngredients(generatedIngredientMap)
                 .withMethod(generatedMethodMap)
@@ -45,6 +53,89 @@ public interface RecipeDataFactory {
 
         return recipe;
 
+    }
+
+    /**
+     * Generates a set of RecipeImage objects
+     *
+     * @param maxSetSize Max value for the generated number of RecipeImage objects
+     * @return a set of RecipeImage objects
+     */
+    static Set<RecipeImage> generateRecipeImageSet(final int maxSetSize) throws IOException {
+
+        //Create the RecipeImage set and define the number of RecipeImages in the set.
+        final Set<RecipeImage> recipeImageSet = new HashSet<>();
+        final int numberOfRecipeImages = generateNumber(maxSetSize);
+
+        //Populate the recipe image set with random recipeImage objects
+        for (int i = 0; i < numberOfRecipeImages; i++) {
+            final RecipeImage generatedRecipeImage = generateRecipeImage();
+            recipeImageSet.add(generatedRecipeImage);
+        }
+
+        return recipeImageSet;
+
+    }
+
+    /**
+     * Generates a recipeImage with random data
+     *
+     * @return randomly generated recipeImage object
+     */
+    static RecipeImage generateRecipeImage() throws IOException {
+
+        //Faker object to generate the test data
+        final Faker faker = new Faker();
+
+        //Generate a random image for the recipe image and convert it to a byte array.
+        final byte[] imageAsByteArray = generateRandomImageAsByteArray();
+
+        final RecipeImage generatedRecipeImage = new RecipeImage
+                .RecipeImageBuilder(
+                faker.food().dish(),
+                "image/jpeg",
+                imageAsByteArray).build();
+
+        return generatedRecipeImage;
+    }
+
+
+    /**
+     * This method uses unsplash.com to generate a random image of food.
+     * The method then reads the image data from the input stream of the URL connection,
+     * writes it to a ByteArrayOutputStream object in memory using a temporary buffer,
+     * and then creates a new byte array containing the same data by calling the toByteArray method
+     * on the ByteArrayOutputStream object.
+     * The resulting byte[] array can be used to store the image data.
+     *
+     * @return a byte[] that stores the randomly generated image data.
+     * @throws IOException
+     */
+    static byte[] generateRandomImageAsByteArray() throws IOException {
+        // Construct URL object with a URL that returns a random photo of food
+        final URL url = new URL("https://source.unsplash.com/random/?food");
+        // Open connection to the URL
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        // the stream of bytes that can be read from the URL connection
+        final InputStream inputStream = connection.getInputStream();
+
+        //Define stream object that can be written to and resized as needed.
+        //Need this stream to write the image data to in memory.
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        // Read data from the input stream into a byte array using a while loop which continues until
+        // there are no more bytes in the stream (when bytesRead = -1) ensuring that only the actual
+        // number of bytes read from the stream are written to the output stream.
+        final byte[] buffer = new byte[4096];
+        int bytesRead = -1;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        final byte[] randomImageBytes = outputStream.toByteArray();
+
+        return randomImageBytes;
     }
 
     /**

@@ -50,6 +50,10 @@ public class RecipeEntity {
     @Column(name = "thumbsDownCount")
     private Integer thumbsDownCount;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "recipe_key") // Foreign key column in the recipe_image table
+    private Set<RecipeImageEntity> recipeImageEntity; //TODO rename this as a set
+
     //Defines a collection of instances.
     @ElementCollection
     //Join column used to map Recipe entity id (primary key value) to the tags' collection table's ID column.

@@ -4,9 +4,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eatsy.appservice.domain.Recipe;
+import org.eatsy.appservice.domain.RecipeImage;
+import org.eatsy.appservice.model.RecipeMediaCardModel;
 import org.eatsy.appservice.model.RecipeModel;
 import org.eatsy.appservice.persistence.model.RecipeEntity;
+import org.eatsy.appservice.persistence.model.RecipeImageEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Recipe Mapper Handler to map between recipe domain and model objects.
@@ -26,7 +36,7 @@ public class RecipeMapperHandler implements RecipeMapper {
     public RecipeModel mapDomainToModel(final Recipe recipe) {
 
         RecipeModel recipeModel = null;
-        //The recipe to be mapped must not be null and the recipe must have a name.
+        //The recipe to be mapped (and it's fields) must not be null.
         if (null != recipe
                 && StringUtils.isNotEmpty(recipe.getName().trim())
                 && StringUtils.isNotEmpty(recipe.getUploader().trim())
@@ -49,19 +59,24 @@ public class RecipeMapperHandler implements RecipeMapper {
             recipeModel.setRecipeSummary(recipe.getRecipeSummary());
 
             //Map thumbsUpCount.
-            recipeModel.setThumbsUpCount(recipe.getThumbsUpCount());
+            recipeModel.setThumbsUpCount(recipe.getThumbsUpCount().toString());
 
             //Map thumbsDownCount.
-            recipeModel.setThumbsDownCount(recipe.getThumbsDownCount());
+            recipeModel.setThumbsDownCount(recipe.getThumbsDownCount().toString());
 
             //Map tags
             recipeModel.setTags(recipe.getTags());
 
-            //Map set of ingredients.
-            recipeModel.setIngredients(recipe.getIngredients());
+            final Map<String, String> updatedStringIngredientsMap = recipe.getIngredients()
+                    .entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), Map.Entry::getValue));
 
+            //Map set of ingredients.
+            recipeModel.setIngredients(updatedStringIngredientsMap);
+
+            final Map<String, String> updatedStringMethodMap = recipe.getMethod()
+                    .entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), Map.Entry::getValue));
             //Map method.
-            recipeModel.setMethod(recipe.getMethod());
+            recipeModel.setMethod(updatedStringMethodMap);
 
         }
         return recipeModel;
@@ -69,36 +84,62 @@ public class RecipeMapperHandler implements RecipeMapper {
     }
 
     /**
-     * Map the recipeModel to a recipe domain object.
+     * Map the recipeMediaCardModel to a recipe domain object.
      * If the model has an existing key, the mapper ensures the existing key is kept.
      * If the model doesn't yet have a key, then a new key will be assigned.
      *
-     * @param recipeModel the model object to be mapped to domain object
+     * @param recipeMediaCardModel the model object to be mapped to domain object
      * @return the recipe domain object that has been created from the recipe model object
      */
     @Override
-    public Recipe mapModelToDomain(final RecipeModel recipeModel) {
+    public Recipe mapModelToDomain(final RecipeMediaCardModel recipeMediaCardModel) {
 
         Recipe recipe = null;
-        //The recipe model to be mapped must not be null, the recipeModel must have a name, an uploader and a recipe summary
-        if (null != recipeModel
-                && StringUtils.isNotEmpty(recipeModel.getName().trim())
-                && StringUtils.isNotEmpty(recipeModel.getUploader().trim())
-                && StringUtils.isNotEmpty(recipeModel.getRecipeSummary().trim())) {
+        //The recipe model to be mapped must not be null, the recipeMediaCardModel must have a name, an uploader and a recipe summary
+        if (null != recipeMediaCardModel
+                && StringUtils.isNotEmpty(recipeMediaCardModel.getRecipeModel().getName().trim())
+                && StringUtils.isNotEmpty(recipeMediaCardModel.getRecipeModel().getUploader().trim())
+                && StringUtils.isNotEmpty(recipeMediaCardModel.getRecipeModel().getRecipeSummary().trim())) {
 
-            logger.debug("Mapping model object " + recipeModel.getName() + " to a recipe domain object");
+            logger.debug("Mapping model object " + recipeMediaCardModel.getRecipeModel().getName() + " to a recipe domain object");
+
+            //TODO extract this into a mapper - MultipartFile -> RecipeImage
+            final Set<RecipeImage> recipeImageSet = new HashSet<>();
+            for (final MultipartFile currentMultipartFile : recipeMediaCardModel.getRecipeCardImages()) {
+                try {
+                    final RecipeImage recipeImage = new RecipeImage.RecipeImageBuilder(
+                            currentMultipartFile.getName(),
+                            currentMultipartFile.getContentType(),
+                            currentMultipartFile.getBytes())
+                            .build();
+
+                    recipeImageSet.add(recipeImage);
+
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            final Map<Integer, String> updatedIntegerIngredientsMap = recipeMediaCardModel.getRecipeModel().getIngredients()
+                    .entrySet().stream().collect(Collectors.toMap(e -> Integer.parseInt(e.getKey()), Map.Entry::getValue));
+
+            final Map<Integer, String> updatedMethodIngredientsMap = recipeMediaCardModel.getRecipeModel().getMethod()
+                    .entrySet().stream().collect(Collectors.toMap(e -> Integer.parseInt(e.getKey()), Map.Entry::getValue));
 
             final Recipe.RecipeBuilder recipeBuilder = new Recipe.RecipeBuilder(
-                    recipeModel.getName(), recipeModel.getUploader(), recipeModel.getRecipeSummary())
-                    .withThumbsUpCount(recipeModel.getThumbsUpCount())
-                    .withThumbsDownCount(recipeModel.getThumbsDownCount())
-                    .withIngredients(recipeModel.getIngredients())
-                    .withMethod(recipeModel.getMethod())
-                    .withTags(recipeModel.getTags());
+                    recipeMediaCardModel.getRecipeModel().getName(),
+                    recipeMediaCardModel.getRecipeModel().getUploader(),
+                    recipeMediaCardModel.getRecipeModel().getRecipeSummary(),
+                    recipeImageSet)
+                    .withThumbsUpCount(Integer.parseInt(recipeMediaCardModel.getRecipeModel().getThumbsUpCount()))
+                    .withThumbsDownCount(Integer.parseInt(recipeMediaCardModel.getRecipeModel().getThumbsDownCount()))
+                    .withIngredients(updatedIntegerIngredientsMap)
+                    .withMethod(updatedMethodIngredientsMap)
+                    .withTags(recipeMediaCardModel.getRecipeModel().getTags());
             // The recipeBuilder automatically assigns a new key,
             // so if the model already has an existing key, then this will ensure the existing key is kept.
-            if (recipeModel.getKey() != null) {
-                recipeBuilder.withSpecifiedKey(recipeModel.getKey());
+            if (recipeMediaCardModel.getRecipeModel().getKey() != null) {
+                recipeBuilder.withSpecifiedKey(recipeMediaCardModel.getRecipeModel().getKey());
             }
 
             recipe = recipeBuilder.build();
@@ -126,6 +167,17 @@ public class RecipeMapperHandler implements RecipeMapper {
                 && StringUtils.isNotEmpty(recipe.getRecipeSummary().trim())) {
 
             logger.debug("Mapping domain object " + recipe.getName() + " to a recipeEntity object");
+
+            //TODO extract this as a mapper
+            final Set<RecipeImageEntity> recipeImageEntitySet = new HashSet<>();
+            for (final RecipeImage currentRecipeImage : recipe.getRecipeImageSet()) {
+                final RecipeImageEntity recipeImageEntity = new RecipeImageEntity();
+                recipeImageEntity.setImageName(currentRecipeImage.getImageName());
+                recipeImageEntity.setImageType(currentRecipeImage.getImageType());
+                recipeImageEntity.setPicByte(currentRecipeImage.getPicByte());
+                recipeImageEntity.setKey(currentRecipeImage.getKey());
+                recipeImageEntitySet.add(recipeImageEntity);
+            }
 
             recipeEntity = new RecipeEntity();
 
@@ -156,6 +208,9 @@ public class RecipeMapperHandler implements RecipeMapper {
             //Map method.
             recipeEntity.setMethodMap(recipe.getMethod());
 
+            //Map imageSet
+            recipeEntity.setRecipeImageEntity(recipeImageEntitySet);
+
         }
         return recipeEntity;
     }
@@ -178,8 +233,21 @@ public class RecipeMapperHandler implements RecipeMapper {
 
             logger.debug("Mapping entity object " + recipeEntity.getName() + " to a recipedomain object");
 
+            //TODO extract this as a mapper
+            final Set<RecipeImage> recipeImageSet = new HashSet<>();
+            for (final RecipeImageEntity currentRecipeImageEntity : recipeEntity.getRecipeImageEntity()) {
+                final RecipeImage recipeImage = new RecipeImage.RecipeImageBuilder(
+                        currentRecipeImageEntity.getImageName(),
+                        currentRecipeImageEntity.getImageType(),
+                        currentRecipeImageEntity.getPicByte())
+                        .withSpecifiedKey(currentRecipeImageEntity.getKey())
+                        .build();
+                recipeImageSet.add(recipeImage);
+            }
+
             recipe = new Recipe
-                    .RecipeBuilder(recipeEntity.getName(), recipeEntity.getUploader(), recipeEntity.getRecipeSummary())
+                    .RecipeBuilder(recipeEntity.getName(), recipeEntity.getUploader(),
+                    recipeEntity.getRecipeSummary(), recipeImageSet)
                     .withTags(recipeEntity.getTags())
                     .withIngredients(recipeEntity.getIngredientsMap())
                     .withMethod(recipeEntity.getMethodMap())

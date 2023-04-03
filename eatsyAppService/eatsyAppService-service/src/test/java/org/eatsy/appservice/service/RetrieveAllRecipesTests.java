@@ -2,7 +2,7 @@ package org.eatsy.appservice.service;
 
 import org.eatsy.appservice.model.RecipeModel;
 import org.eatsy.appservice.model.mappers.RecipeMapper;
-import org.eatsy.appservice.persistence.service.EatsyRepositoryService;
+import org.eatsy.appservice.persistence.recipe.service.EatsyRecipeRepositoryService;
 import org.eatsy.appservice.testdatageneration.RecipeModelDataFactory;
 import org.eatsy.appservice.testdatageneration.constants.EatsyRecipeTestParameters;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +30,7 @@ public class RetrieveAllRecipesTests {
 
     //Create a mock implementation of the EatsyRepositoryService. These unit tests are only concerned with the service module not the persistence module.
     @Mock
-    private EatsyRepositoryService eatsyRepositoryHandler;
+    private EatsyRecipeRepositoryService eatsyRepositoryHandler;
 
     /**
      * Class under test.

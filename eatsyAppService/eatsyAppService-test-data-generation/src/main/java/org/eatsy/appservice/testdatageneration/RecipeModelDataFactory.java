@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import org.eatsy.appservice.model.RecipeModel;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Interface for recipe model test data creation utility methods
@@ -40,14 +41,20 @@ public interface RecipeModelDataFactory {
         //Generate a map of method steps.
         final Map<Integer, String> generatedMethodMap = generateMethodMap(maxMethodMapSize);
 
+        final Map<String, String> generatedStringIngredientMap = generatedIngredientMap
+                .entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), Map.Entry::getValue));
+
+        final Map<String, String> generatedStringMethod = generatedMethodMap
+                .entrySet().stream().collect(Collectors.toMap(e -> String.valueOf(e.getKey()), Map.Entry::getValue));
+
         recipeModel.setName(recipeName);
         recipeModel.setUploader(uploader);
         recipeModel.setRecipeSummary(recipeSummary);
-        recipeModel.setThumbsUpCount(thumbsUpCount);
-        recipeModel.setThumbsDownCount(thumbsDownCount);
+        recipeModel.setThumbsUpCount(thumbsUpCount.toString());
+        recipeModel.setThumbsDownCount(thumbsDownCount.toString());
         recipeModel.setTags(generatedTagSet);
-        recipeModel.setIngredients(generatedIngredientMap);
-        recipeModel.setMethod(generatedMethodMap);
+        recipeModel.setIngredients(generatedStringIngredientMap);
+        recipeModel.setMethod(generatedStringMethod);
         return recipeModel;
 
     }

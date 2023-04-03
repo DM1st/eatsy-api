@@ -47,7 +47,10 @@ public final class Recipe {
     //The method for creating the recipe from the ingredients
     private final Map<Integer, String> method;
 
+    //The set of recipeImages for the recipe
+    private final Set<RecipeImage> recipeImageSet;
 
+    //Constructor
     private Recipe(final RecipeBuilder builder) {
         key = builder.key;
         name = builder.name;
@@ -58,6 +61,7 @@ public final class Recipe {
         ingredients = builder.ingredients;
         method = builder.method;
         tags = builder.tags;
+        recipeImageSet = builder.recipeImageSet;
     }
 
     /**
@@ -76,19 +80,21 @@ public final class Recipe {
         private Integer thumbsUpCount;
         private Integer thumbsDownCount;
         private String key;
+        private final Set<RecipeImage> recipeImageSet;
         //Optional
         private Map<Integer, String> ingredients;
         private Map<Integer, String> method;
         private Set<String> tags;
 
         //Constructor for the mandatory Recipe object fields
-        public RecipeBuilder(final String name, final String uploader, final String recipeSummary) {
+        public RecipeBuilder(final String name, final String uploader, final String recipeSummary, final Set<RecipeImage> recipeImageSet) {
             this.key = UUID.randomUUID().toString();
             this.thumbsUpCount = 0;
             this.thumbsDownCount = 0;
             this.name = name;
             this.uploader = uploader;
             this.recipeSummary = recipeSummary;
+            this.recipeImageSet = recipeImageSet;
         }
 
         public RecipeBuilder withIngredients(final Map<Integer, String> ingredients) {

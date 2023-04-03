@@ -1,13 +1,15 @@
-package org.eatsy.appservice.persistence.service;
+package org.eatsy.appservice.persistence.recipe.service;
 
 import org.eatsy.appservice.persistence.model.RecipeEntity;
+import org.eatsy.appservice.persistence.model.RecipeImageEntity;
 
 import java.util.List;
+import java.util.Set;
 
 /**
- * Interface for interacting with the JPA repository and persisting data
+ * Interface for interacting with the JPA repository and persisting RecipeEntities
  */
-public interface EatsyRepositoryService {
+public interface EatsyRecipeRepositoryService {
 
     /**
      * Persists the RecipeEntity object to the database.
@@ -30,4 +32,6 @@ public interface EatsyRepositoryService {
      */
     void deleteRecipeById(String recipeKey);
 
+    //TODO
+    Set<RecipeImageEntity> retrieveRecipeImageModels(String recipeKey);
 }
