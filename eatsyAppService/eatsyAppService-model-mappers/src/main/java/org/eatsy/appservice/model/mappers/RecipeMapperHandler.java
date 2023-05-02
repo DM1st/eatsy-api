@@ -105,18 +105,21 @@ public class RecipeMapperHandler implements RecipeMapper {
 
             //TODO extract this into a mapper - MultipartFile -> RecipeImage
             final Set<RecipeImage> recipeImageSet = new HashSet<>();
-            for (final MultipartFile currentMultipartFile : recipeMediaCardModel.getRecipeCardImages()) {
-                try {
-                    final RecipeImage recipeImage = new RecipeImage.RecipeImageBuilder(
-                            currentMultipartFile.getName(),
-                            currentMultipartFile.getContentType(),
-                            currentMultipartFile.getBytes())
-                            .build();
+            if (recipeMediaCardModel.getRecipeCardImages() != null) {
 
-                    recipeImageSet.add(recipeImage);
+                for (final MultipartFile currentMultipartFile : recipeMediaCardModel.getRecipeCardImages()) {
+                    try {
+                        final RecipeImage recipeImage = new RecipeImage.RecipeImageBuilder(
+                                currentMultipartFile.getName(),
+                                currentMultipartFile.getContentType(),
+                                currentMultipartFile.getBytes())
+                                .build();
 
-                } catch (final IOException e) {
-                    e.printStackTrace();
+                        recipeImageSet.add(recipeImage);
+
+                    } catch (final IOException e) {
+                        logger.error("Error extracting multipart file.", e);
+                    }
                 }
             }
 
@@ -221,14 +224,16 @@ public class RecipeMapperHandler implements RecipeMapper {
 
             //TODO extract this as a mapper
             final Set<RecipeImage> recipeImageSet = new HashSet<>();
-            for (final RecipeImageEntity currentRecipeImageEntity : recipeEntity.getRecipeImageEntity()) {
-                final RecipeImage recipeImage = new RecipeImage.RecipeImageBuilder(
-                        currentRecipeImageEntity.getImageName(),
-                        currentRecipeImageEntity.getImageType(),
-                        currentRecipeImageEntity.getPicByte())
-                        .withSpecifiedKey(currentRecipeImageEntity.getKey())
-                        .build();
-                recipeImageSet.add(recipeImage);
+            if (recipeEntity.getRecipeImageEntity() != null) {
+                for (final RecipeImageEntity currentRecipeImageEntity : recipeEntity.getRecipeImageEntity()) {
+                    final RecipeImage recipeImage = new RecipeImage.RecipeImageBuilder(
+                            currentRecipeImageEntity.getImageName(),
+                            currentRecipeImageEntity.getImageType(),
+                            currentRecipeImageEntity.getPicByte())
+                            .withSpecifiedKey(currentRecipeImageEntity.getKey())
+                            .build();
+                    recipeImageSet.add(recipeImage);
+                }
             }
 
             recipe = new Recipe

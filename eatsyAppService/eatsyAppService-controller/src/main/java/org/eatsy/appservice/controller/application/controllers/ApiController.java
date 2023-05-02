@@ -17,9 +17,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * API Controller for creating, editing, deleting and retrieving recipes.
@@ -57,13 +61,25 @@ public class ApiController {
     @RequestMapping(value = EatsyRecipeEndpoints.ADD_RECIPE, method = {RequestMethod.POST}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseBody
     public ResponseEntity<RecipeModel> addRecipe(
-            @Parameter(description = "The recipe to be created.") @ModelAttribute final RecipeMediaCardModel recipeMediaCardModel) {
+            HttpServletRequest req) {
 
-        logger.debug("A new request has been made to create a recipe called " + recipeMediaCardModel.getRecipeModel().getName());
-        final RecipeModel newRecipeModel = recipeFactoryHandler.createRecipe(recipeMediaCardModel);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            RecipeMediaCardModel recipeMediaCardModel = objectMapper
+                    .readValue(req.getPart("recipeMediaCardModel").getInputStream(), RecipeMediaCardModel.class);
 
-        final ResponseEntity<RecipeModel> response = new ResponseEntity<RecipeModel>(newRecipeModel, HttpStatus.OK);
-        return response;
+            logger.debug("A new request has been made to create a recipe called " +
+                    recipeMediaCardModel.getRecipeModel().getName());
+            final RecipeModel newRecipeModel = recipeFactoryHandler.createRecipe(recipeMediaCardModel);
+
+            final ResponseEntity<RecipeModel> response = new ResponseEntity<RecipeModel>(newRecipeModel,
+                    HttpStatus.OK);
+            return response;
+
+        } catch (IOException | ServletException ex) {
+            logger.error("Error getting recipeMediaCardModel part.", ex);
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
