@@ -29,7 +29,7 @@ ext.springBootVersion = '2.7.5'
 ext.springDocVersion = '1.6.9'
 
 //Spring/Dependency Injection
-ext.springContextVersion = '5.3.20'
+ext.springContextVersion = '6.0.9'
 
 //Logging
 ext.log4jCoreVersion = '2.17.2'
