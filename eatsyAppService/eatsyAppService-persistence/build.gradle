@@ -18,6 +18,9 @@ dependencies {
     //Connect to PostgreSQL Database with Spring Data JPA
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$SpringBootStarterDataJpaVersion"
 
+    //H2 in memory DB
+    runtimeOnly "com.h2database:h2:$h2Version"
+
     //For DataJpaTest
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springStarterTestVersion"
     //For H2 in memory test database

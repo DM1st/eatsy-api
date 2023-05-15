@@ -40,6 +40,9 @@ ext.PostgreSqlJdbcDriverVersion = '42.3.6'
 ext.SpringBootStarterJdbcVersion = '2.7.0'
 ext.SpringBootStarterDataJpaVersion = '2.7.0'
 
+//H2 In-memory DB
+ext.h2Version = '2.1.214'
+
 //Specify the group for all gradle sub projects defined in gradle.settings
 //The repositories block defines where the build system will look for required libraries
 allprojects {
