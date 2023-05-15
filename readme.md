@@ -31,7 +31,7 @@ performance.
 
 #### Pre-requisites
 
-* JDK (version 8 or higher) installed and configured on your local machine to be able to complie and run the Java code.
+* JDK (this project has been developed using JDK 20) installed and configured on your local machine to be able to complie and run the Java code.
 * Before running the service, you will need to have a Postgres instance installed and need to update the Spring Boot
   ```application.properties``` file to configure the connection details (e.g. host, port, username and password) to
   align to your database instance that the application will use to connect to it. For example:
@@ -47,6 +47,12 @@ spring.jpa.show-sql=true
 ```application.properties``` can be found at:
 
 ```<projectRoot>\eatsyAppService\eatsyAppService-controller\src\main\resources\application.properties```
+
+If you don't want to install postgres on your machine, you can use a H2 in memory database by using thr following command:
+
+```
+./gradlew clean build bootrun --args='--spring.profiles.active=h2'
+```
 
 #### Running the service can then be done from a bash terminal:
 
