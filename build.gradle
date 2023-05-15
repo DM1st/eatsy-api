@@ -32,8 +32,8 @@ ext.springDocVersion = '1.6.9'
 ext.springContextVersion = '5.3.20'
 
 //Logging
-ext.log4jCoreVersion = '2.17.2'
-ext.log4jApiVersion = '2.17.2'
+ext.log4jCoreVersion = '2.20.0'
+ext.log4jApiVersion = '2.20.0'
 
 //PostgreSQL
 ext.PostgreSqlJdbcDriverVersion = '42.3.6'
