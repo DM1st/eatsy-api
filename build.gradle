@@ -25,7 +25,7 @@ ext.h2Version = '2.1.214'
 ext.hsqldbVersion = '2.7.1'
 
 //spring
-ext.springBootVersion = '2.7.5'
+ext.springBootVersion = '3.0.6'
 ext.springDocVersion = '1.6.9'
 
 //Spring/Dependency Injection
@@ -70,6 +70,11 @@ subprojects {
         }
     }
 
+    //specify version of jacoco dependency
+    jacoco {
+        toolVersion = "0.8.10"
+    }
+
 }
 
 //The buildscript section declares the dependencies required by the Gradle build system to build the project.
@@ -78,7 +83,7 @@ subprojects {
 // Spring Boot application and to generate and upload code coverage reports, respectively.
 buildscript {
     ext {
-        springBootGradlePluginVersion = '2.7.5'
+        springBootGradlePluginVersion = '3.0.6'
     }
     repositories {
         mavenCentral()
@@ -111,37 +116,31 @@ buildscript {
 // The coveralls task depends on the jacocoRootReport task and is grouped with other coverage reports tasks
 // under the 'Coverage reports' group.
 
-
-def allTestCoverageFile = "$buildDir/jacoco/allTestCoverage.exec"
-def devProjects = subprojects.findAll { it.path != 'test' } //Exclude test code projects
-
-task jacocoMerge(type: JacocoMerge) {
-    devProjects.each { subproject ->
-        executionData subproject.tasks.withType(Test)
-    }
-    doFirst {
-        executionData = files(executionData.findAll { it.exists() })
-    }
-    destinationFile = file(allTestCoverageFile)
-}
-
+// Create a new Jacoco coverage report task
 task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     description = 'Generates an aggregate report from all subprojects'
-    dependsOn devProjects.test, jacocoMerge
+    dependsOn(subprojects.test)
 
-    getAdditionalSourceDirs().setFrom(files(devProjects.sourceSets.main.allSource.srcDirs))
-    getSourceDirectories().setFrom(files(devProjects.sourceSets.main.allSource.srcDirs))
-    getClassDirectories().setFrom(files(devProjects.sourceSets.main.output))
-    executionData jacocoMerge.destinationFile
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(subprojects.sourceSets.main.output)
+
+    executionData {
+        subprojects.each { subproject ->
+            from(subproject.tasks.withType(Test).flatMap { it.extensions.getByType(JacocoTaskExtension).destinationFile })
+        }
+    }
 
     reports {
-        html.required = true // human readable
-        xml.required = true // required by coveralls
+        html.destination = file("$buildDir/reports/jacoco/html") // Specify the output directory for the HTML report
+        xml {
+            xml.destination = file("$buildDir/reports/jacoco/jacoco.xml") // Specify the destination file for the XML report
+        }
     }
 }
 
+// Updated coveralls configuration
 coveralls {
-    sourceDirs = devProjects.sourceSets.main.allSource.srcDirs.flatten()
+    sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
 
