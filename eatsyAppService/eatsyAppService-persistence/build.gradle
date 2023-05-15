@@ -20,6 +20,8 @@ dependencies {
 
     //H2 in memory DB
     runtimeOnly "com.h2database:h2:$h2Version"
+    implementation "org.hibernate.validator:hibernate-validator:8.0.0.Final"
+
 
     //For DataJpaTest
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springStarterTestVersion"
