@@ -38,7 +38,7 @@ ext.log4jApiVersion = '2.17.2'
 //PostgreSQL
 ext.PostgreSqlJdbcDriverVersion = '42.3.6'
 ext.SpringBootStarterJdbcVersion = '2.7.0'
-ext.SpringBootStarterDataJpaVersion = '2.7.0'
+ext.SpringBootStarterDataJpaVersion = '3.0.7'
 
 //Specify the group for all gradle sub projects defined in gradle.settings
 //The repositories block defines where the build system will look for required libraries
